@@ -1,12 +1,12 @@
-import React from 'react'
-//import * as BooksAPI from './BooksAPI'
+import React, { Component } from 'react'
+import * as BooksAPI from './BooksAPI'
 import './App.css'
 import Search from './Search'
 import CurrentlyReading from './CurrentlyReading'
 import WantToRead from './WantToRead'
 import Read from './Read'
 
-class BooksApp extends React.Component {
+class BooksApp extends Component {
   state = {
     /**
      * TODO: Instead of using this state variable to keep track of which page
@@ -14,9 +14,32 @@ class BooksApp extends React.Component {
      * users can use the browser's back and forward buttons to navigate between
      * pages, as well as provide a good URL they can bookmark and share.
      */
-    showSearchPage: false
+    showSearchPage: false,
+    read: [],
+    currentlyReading: [],
+    wantToRead: []
   }
 
+  bookTypes = {
+    read: 'read',
+    currentlyReading: 'currentlyReading',
+    wantToRead: 'wantToRead'
+  }
+  
+  getShelfBooks = (books, shelf) => books.filter((book) => book.shelf === shelf)
+  
+  componentDidMount() {
+    BooksAPI.getAll().then((books) => {
+      const read = this.getShelfBooks(books, this.bookTypes.read)
+      const currentlyReading = this.getShelfBooks(books, this.bookTypes.currentlyReading)
+      const wantToRead = this.getShelfBooks(books, this.bookTypes.wantToRead)
+      this.setState({read})
+      this.setState({currentlyReading})
+      this.setState({wantToRead})
+    })
+  }
+
+ 
   render() {
     return (
       <div className="app">
@@ -29,9 +52,9 @@ class BooksApp extends React.Component {
             </div>
             <div className="list-books-content">
               <div>
-                  <CurrentlyReading />
-                  <WantToRead />
-                  <Read />
+                  <CurrentlyReading books={this.state.currentlyReading} />
+                  <WantToRead books={this.state.wantToRead}/>
+                  <Read books={this.state.read}/>
               </div>
             </div>
             <div className="open-search">
