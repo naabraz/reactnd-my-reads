@@ -1,15 +1,16 @@
 import React, { Component } from 'react'
 
-class CurrentlyReading extends Component {
+class Shelf extends Component {
+
   render() {
-    const { changeShelfBook } = this.props
+    const { changeShelfBook, shelfName, books } = this.props
 
     return (
         <div className="bookshelf">
-          <h2 className="bookshelf-title">Currently Reading</h2>
+          <h2 className="bookshelf-title">{shelfName}</h2>
           <div className="bookshelf-books">
             <ol className="books-grid">
-              {this.props.books.map((book) => (
+              {books.map((book) => (
                 <li key={book.title}>
                   <div className="book">
                     <div className="book-top">
@@ -17,10 +18,10 @@ class CurrentlyReading extends Component {
                       <div className="book-shelf-changer">
                         <select onChange={(event) => changeShelfBook(event.target.value, book)}>
                           <option value="move" disabled>Move to...</option>
-                            <option value="currentlyReading">Currently Reading</option>
-                            <option value="wantToRead">Want to Read</option>
-                            <option value="read">Read</option>
-                            <option value="none">None</option>
+                          <option value="currentlyReading">Currently Reading</option>
+                          <option value="wantToRead">Want to Read</option>
+                          <option value="read">Read</option>
+                          <option value="none">None</option>
                         </select>
                       </div>
                     </div>
@@ -36,4 +37,4 @@ class CurrentlyReading extends Component {
   }
 }
 
-export default CurrentlyReading
+export default Shelf

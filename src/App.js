@@ -2,9 +2,7 @@ import React, { Component } from 'react'
 import * as BooksAPI from './BooksAPI'
 import './App.css'
 import Search from './Search'
-import CurrentlyReading from './CurrentlyReading'
-import WantToRead from './WantToRead'
-import Read from './Read'
+import Shelf from './Shelf'
 
 class BooksApp extends Component {
   state = {
@@ -17,7 +15,8 @@ class BooksApp extends Component {
     showSearchPage: false,
     read: [],
     currentlyReading: [],
-    wantToRead: []
+    wantToRead: [],
+    shelfOptions: []
   }
 
   bookTypes = {
@@ -27,15 +26,18 @@ class BooksApp extends Component {
   }
 
   getShelfBooks = (books, shelf) => books.filter((book) => book.shelf === shelf)
+  getShelfOptions = (books) => books.map((book) => book.shelf)
 
   componentDidMount() {
     BooksAPI.getAll().then((books) => {
       const read = this.getShelfBooks(books, this.bookTypes.read)
       const currentlyReading = this.getShelfBooks(books, this.bookTypes.currentlyReading)
       const wantToRead = this.getShelfBooks(books, this.bookTypes.wantToRead)
+      const shelfOptions = this.getShelfOptions(books)
       this.setState({read})
       this.setState({currentlyReading})
       this.setState({wantToRead})
+      this.setState({shelfOptions})
     })
   }
 
@@ -60,9 +62,9 @@ class BooksApp extends Component {
             </div>
             <div className="list-books-content">
               <div>
-                <CurrentlyReading books={this.state.currentlyReading} changeShelfBook={this.changeShelfBook} />
-                <WantToRead books={this.state.wantToRead}/>
-                <Read books={this.state.read}/>
+                <Shelf shelfName="Currently Reading" shelfOptions={this.state.shelfOptions} books={this.state.currentlyReading} changeShelfBook={this.changeShelfBook} />
+                <Shelf shelfName="Want To Read" shelfOptions={this.state.shelfOptions} books={this.state.wantToRead} changeShelfBook={this.changeShelfBook} />
+                <Shelf shelfName="Read" shelfOptions={this.state.shelfOptions} books={this.state.read} changeShelfBook={this.changeShelfBook} />
               </div>
             </div>
             <div className="open-search">
