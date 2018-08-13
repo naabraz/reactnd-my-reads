@@ -25,9 +25,9 @@ class BooksApp extends Component {
     currentlyReading: 'currentlyReading',
     wantToRead: 'wantToRead'
   }
-  
+
   getShelfBooks = (books, shelf) => books.filter((book) => book.shelf === shelf)
-  
+
   componentDidMount() {
     BooksAPI.getAll().then((books) => {
       const read = this.getShelfBooks(books, this.bookTypes.read)
@@ -39,7 +39,15 @@ class BooksApp extends Component {
     })
   }
 
- 
+  changeShelfBook = (shelf, book) => {
+    this.setState((state) => (state[shelf].push(book)))
+
+    this.setState((state) => {
+      const currentShelf = book.shelf
+      state[currentShelf] = state[currentShelf].filter((b) => b.id !== book.id)
+    })
+  }
+
   render() {
     return (
       <div className="app">
@@ -52,9 +60,9 @@ class BooksApp extends Component {
             </div>
             <div className="list-books-content">
               <div>
-                  <CurrentlyReading books={this.state.currentlyReading} />
-                  <WantToRead books={this.state.wantToRead}/>
-                  <Read books={this.state.read}/>
+                <CurrentlyReading books={this.state.currentlyReading} changeShelfBook={this.changeShelfBook} />
+                <WantToRead books={this.state.wantToRead}/>
+                <Read books={this.state.read}/>
               </div>
             </div>
             <div className="open-search">
