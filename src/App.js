@@ -26,7 +26,7 @@ class BooksApp extends Component {
   }
 
   getShelfBooks = (books, shelf) => books.filter((book) => book.shelf === shelf)
-  getShelfOptions = (books) => books.map((book) => book.shelf)
+  getShelfOptions = (books) => books.map((book) => book.shelf).filter((elem, pos, arr) => arr.indexOf(elem) === pos)
 
   componentDidMount() {
     BooksAPI.getAll().then((books) => {

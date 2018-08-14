@@ -3,7 +3,7 @@ import React, { Component } from 'react'
 class Shelf extends Component {
 
   render() {
-    const { changeShelfBook, shelfName, books } = this.props
+    const { changeShelfBook, shelfName, books, shelfOptions } = this.props
 
     return (
         <div className="bookshelf">
@@ -18,10 +18,7 @@ class Shelf extends Component {
                       <div className="book-shelf-changer">
                         <select onChange={(event) => changeShelfBook(event.target.value, book)}>
                           <option value="move" disabled>Move to...</option>
-                          <option value="currentlyReading">Currently Reading</option>
-                          <option value="wantToRead">Want to Read</option>
-                          <option value="read">Read</option>
-                          <option value="none">None</option>
+                          {shelfOptions.map((option) => ( <option key={option} value={option}>{option}</option> ))}
                         </select>
                       </div>
                     </div>
