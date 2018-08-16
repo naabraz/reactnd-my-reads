@@ -18,7 +18,9 @@ class Shelf extends Component {
                       <div className="book-shelf-changer">
                         <select onChange={(event) => changeShelfBook(event.target.value, book)}>
                           <option value="move" disabled>Move to...</option>
-                          {shelfOptions.map((option) => ( <option key={option} value={option}>{option}</option> ))}
+                          {shelfOptions.filter((option) => option !== book.shelf)
+                              .map((option) => ( <option key={option} value={option}>{option}</option> ))}
+                          <option value="none" defaultValue>None</option>
                         </select>
                       </div>
                     </div>
