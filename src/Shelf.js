@@ -2,9 +2,17 @@ import React, { Component } from 'react'
 
 class Shelf extends Component {
 
+  shelfOption = (option) => {
+      return {
+      'currentlyReading': 'Currently Reading',
+      'read': 'Read',
+      'wantToRead': 'Want To Read'
+    }[option]
+  }
+
   render() {
     const { changeShelfBook, shelfName, books, shelfOptions } = this.props
-    
+
     return (
         <div className="bookshelf">
           <h2 className="bookshelf-title">{shelfName}</h2>
@@ -19,7 +27,7 @@ class Shelf extends Component {
                         <select value="move" onChange={(event) => changeShelfBook(event.target.value, book)}>
                           <option value="move" disabled>Move to...</option>
                           {shelfOptions.filter((option) => option !== book.shelf)
-                              .map((option) => ( <option key={option} value={option}>{option}</option> ))}
+                              .map((option) => ( <option key={option} value={option}>{this.shelfOption(option)}</option> ))}
                         </select>
                       </div>
                     </div>

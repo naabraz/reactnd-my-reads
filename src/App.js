@@ -34,6 +34,7 @@ class BooksApp extends Component {
       const currentlyReading = this.getShelfBooks(books, this.bookTypes.currentlyReading)
       const wantToRead = this.getShelfBooks(books, this.bookTypes.wantToRead)
       const shelfOptions = this.getShelfOptions(books)
+
       this.setState({read})
       this.setState({currentlyReading})
       this.setState({wantToRead})
