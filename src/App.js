@@ -43,11 +43,8 @@ class BooksApp extends Component {
 
   changeShelfBook = (shelf, book) => {
     this.setState((state) => (state[shelf].push(book)))
-
-    this.setState((state) => {
-      const currentShelf = book.shelf
-      state[currentShelf] = state[currentShelf].filter((b) => b.id !== book.id)
-    })
+    this.setState((state) => state[book.shelf] = state[book.shelf].filter((b) => b.id !== book.id))
+    this.setState((state) => (state[shelf][state[shelf].indexOf(book)].shelf = shelf))
   }
 
   render() {

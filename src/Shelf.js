@@ -4,7 +4,7 @@ class Shelf extends Component {
 
   render() {
     const { changeShelfBook, shelfName, books, shelfOptions } = this.props
-
+    
     return (
         <div className="bookshelf">
           <h2 className="bookshelf-title">{shelfName}</h2>
@@ -16,11 +16,10 @@ class Shelf extends Component {
                     <div className="book-top">
                       <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: `url(${book.imageLinks.thumbnail})`}}></div>
                       <div className="book-shelf-changer">
-                        <select onChange={(event) => changeShelfBook(event.target.value, book)}>
+                        <select value="move" onChange={(event) => changeShelfBook(event.target.value, book)}>
                           <option value="move" disabled>Move to...</option>
                           {shelfOptions.filter((option) => option !== book.shelf)
                               .map((option) => ( <option key={option} value={option}>{option}</option> ))}
-                          <option value="none" defaultValue>None</option>
                         </select>
                       </div>
                     </div>
