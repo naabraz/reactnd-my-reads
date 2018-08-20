@@ -5,12 +5,14 @@ import * as BooksAPI from './BooksAPI'
 
 class Search extends Component {
 
-  booksResult = []
+  state = {
+    booksResult: []
+  }
 
   searchBook(query) {
     BooksAPI.search(query).then((response) => {
-      this.booksResult = response
-        console.log(this.booksResult)
+      const booksResult = response
+      this.setState({booksResult})
     })
   }
 
@@ -24,7 +26,9 @@ class Search extends Component {
           </div>
         </div>
         <div className="search-books-results">
-          {this.booksResult.map((book) => <ol className="books-grid">{book.title}</ol>)}
+        <ol className="books-grid">
+          {this.state.booksResult.map((book) => (<li key={book.id} className="books-grid">{book.title}</li>) )}
+        </ol>
         </div>
       </div>
     )
