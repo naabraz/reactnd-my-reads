@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import Shelf from './Shelf'
+
 import * as BooksAPI from './BooksAPI'
+import Shelf from './Shelf'
 
 class ListShelves extends Component {
 
@@ -36,9 +37,7 @@ class ListShelves extends Component {
   }
 
   changeShelfBook = (shelf, book) => {
-    this.setState((state) => (state[shelf].push(book)))
-    this.setState((state) => state[book.shelf] = state[book.shelf].filter((b) => b.id !== book.id))
-    this.setState((state) => (state[shelf][state[shelf].indexOf(book)].shelf = shelf))
+    BooksAPI.update(book, shelf).then(() => this.componentDidMount())
   }
 
   render() {
