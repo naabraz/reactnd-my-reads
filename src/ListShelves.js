@@ -42,17 +42,15 @@ class ListShelves extends Component {
   }
 
   render() {
-      return (
-        <div className="list-books">
+    return (
+      <div className="list-books">
         <div className="list-books-title">
           <h1>MyReads</h1>
         </div>
         <div className="list-books-content">
-          <div>
-            <Shelf shelfName="Currently Reading" shelfOptions={this.state.shelfOptions} books={this.state.currentlyReading} changeShelfBook={this.changeShelfBook} />
-            <Shelf shelfName="Want To Read" shelfOptions={this.state.shelfOptions} books={this.state.wantToRead} changeShelfBook={this.changeShelfBook} />
-            <Shelf shelfName="Read" shelfOptions={this.state.shelfOptions} books={this.state.read} changeShelfBook={this.changeShelfBook} />
-          </div>
+          <Shelf shelfName="Currently Reading" shelfOptions={this.state.shelfOptions} books={this.state.currentlyReading} changeShelfBook={this.changeShelfBook} />
+          <Shelf shelfName="Want To Read" shelfOptions={this.state.shelfOptions} books={this.state.wantToRead} changeShelfBook={this.changeShelfBook} />
+          <Shelf shelfName="Read" shelfOptions={this.state.shelfOptions} books={this.state.read} changeShelfBook={this.changeShelfBook} />
         </div>
         <div className="open-search">
           <Link to='/search' className='open-search'>Search</Link>
