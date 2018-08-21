@@ -9,22 +9,24 @@ class Search extends Component {
     booksResult: []
   }
 
-  searchBook(query) {
-    BooksAPI.search(query).then((response) => {
-      const booksResult = response
+  searchBook (query) {
+    BooksAPI.search(query).then((booksResult) => {
+      const aux = this.getShelf(booksResult)
+      console.log(aux)
       this.setState({booksResult})
     })
   }
 
-  checkBooks(resultBook) {
-    this.props.books.map((books) => {
-      if (books.id === resultBook.id) {
-        console.log('exist', resultBook)
-      }
+  getShelf (searchBooks) {
+    return this.props.books.map((shelfBooks) => {
+      return searchBooks.map((searchBooks) => {
+        return shelfBooks.id === searchBooks.id ? console.log('ye', searchBooks.title) : console.log('no', searchBooks.title)
+        //Object.assign(searchBooks, {shelf: shelfBooks.shelf}) : Object.assign(searchBooks, {shelf: 'none'})
+      })
     })
   }
 
-  render() {
+  render () {
     const { shelfOptions, changeShelfBook, getOptionName } = this.props
 
     return (
@@ -38,7 +40,6 @@ class Search extends Component {
         <div className="search-books-results">
         <ol className="books-grid">
             {this.state.booksResult.map((book) => (
-              this.checkBooks(book),
               <li key={book.id}>
                 <div className="book">
                   <div className="book-top">
