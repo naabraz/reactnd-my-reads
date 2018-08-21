@@ -11,17 +11,17 @@ class Search extends Component {
 
   searchBook (query) {
     BooksAPI.search(query).then((booksResult) => {
-      const aux = this.getShelf(booksResult)
-      console.log(aux)
-      this.setState({booksResult})
+      if (!booksResult.error) {
+        this.getShelf(booksResult)
+        this.setState({booksResult})
+      }
     })
   }
 
   getShelf (searchBooks) {
     return this.props.books.map((shelfBooks) => {
       return searchBooks.map((searchBooks) => {
-        return shelfBooks.id === searchBooks.id ? console.log('ye', searchBooks.title) : console.log('no', searchBooks.title)
-        //Object.assign(searchBooks, {shelf: shelfBooks.shelf}) : Object.assign(searchBooks, {shelf: 'none'})
+        return shelfBooks.id === searchBooks.id ? Object.assign(searchBooks, {shelf: shelfBooks.shelf}) : Object.assign({}, searchBooks)
       })
     })
   }
@@ -39,7 +39,8 @@ class Search extends Component {
         </div>
         <div className="search-books-results">
         <ol className="books-grid">
-            {this.state.booksResult.map((book) => (
+          {this.state.booksResult.length && (
+            this.state.booksResult.map((book) => (
               <li key={book.id}>
                 <div className="book">
                   <div className="book-top">
@@ -47,8 +48,7 @@ class Search extends Component {
                       <div className="book-shelf-changer">
                         <select value={book.shelf ? book.shelf : 'none'} onChange={(event) => changeShelfBook(event.target.value, book)}>
                           <option value="move" disabled>Move to...</option>
-                          {shelfOptions.filter((option) => option !== book.shelf)
-                              .map((option) => ( <option key={option} value={option}>{getOptionName(option)}</option> ))}
+                          {shelfOptions.map((option) => ( <option key={option} value={option}>{getOptionName(option)}</option> ))}
                           <option value="none">None</option>
                         </select>
                       </div>
@@ -56,7 +56,8 @@ class Search extends Component {
                   <div className="book-title">{book.title}</div>
                 </div>
               </li>
-            ))}
+              ))
+            )}
           </ol>
         </div>
       </div>
