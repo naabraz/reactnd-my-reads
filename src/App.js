@@ -53,24 +53,40 @@ class BooksApp extends Component {
     }[option]
   }
 
+  treatNoThumb (books) {
+    books.map((books) => {
+      return !books.imageLinks ? Object.assign(books, { imageLinks: { thumbnail: '' } }) : Object.assign({}, books)
+    })
+  }
+
+  treatNoAuthor (books) {
+    books.map((books) => {
+      return !books.authors ? Object.assign(books, { authors: [] }) : Object.assign({}, books)
+    })
+  }
+
   render() {
     return (
       <div className="app">
         <Route exact path='/' render={() => (
-          <ListShelves shelfOptions={this.state.shelfOptions} 
+          <ListShelves shelfOptions={this.state.shelfOptions}
             currentlyReading={this.state.currentlyReading}
             wantToRead={this.state.wantToRead}
             read={this.state.read}
             changeShelfBook={this.changeShelfBook}
             getOptionName={this.getOptionName}
+            treatNoThumb={this.treatNoThumb}
+            treatNoAuthor={this.treatNoAuthor}
           />
         )}/>
         <Route path='/search' render={({ history }) => (
-          <Search onSearchBook={() => history.push('/')} 
+          <Search onSearchBook={() => history.push('/')}
             shelfOptions={this.state.shelfOptions}
             changeShelfBook={this.changeShelfBook}
             getOptionName={this.getOptionName}
             books={this.state.books}
+            treatNoThumb={this.treatNoThumb}
+            treatNoAuthor={this.treatNoAuthor}
           />
         )}/>
       </div>

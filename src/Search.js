@@ -41,8 +41,8 @@ class Search extends Component {
 
   makeBookObject (booksResult) {
     this.getShelf(booksResult)
-    this.treatNoThumb(booksResult)
-    this.treatNoAuthor(booksResult)
+    this.props.treatNoThumb(booksResult)
+    this.props.treatNoAuthor(booksResult)
     this.setState({booksResult})
   }
 
@@ -54,20 +54,15 @@ class Search extends Component {
     })
   }
 
-  treatNoThumb (searchBooks) {
-    searchBooks.map((books) => {
-      return !books.imageLinks ? Object.assign(books, { imageLinks: { thumbnail: '' } }) : Object.assign({}, books)
-    })
-  }
-
-  treatNoAuthor (searchBooks) {
-    searchBooks.map((books) => {
-      return !books.authors ? Object.assign(books, { authors: [] }) : Object.assign({}, books)
+  addToShelf (shelf, book) {
+    this.props.changeShelfBook(shelf, book)
+    this.setState((state) =>  {
+      state.booksResult[state.booksResult.indexOf(book)].shelf = shelf
     })
   }
 
   render () {
-    const { shelfOptions, changeShelfBook, getOptionName } = this.props
+    const { shelfOptions, getOptionName } = this.props
 
     return (
       <div className="search-books">
@@ -89,7 +84,7 @@ class Search extends Component {
                   <div className="book-top">
                     <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: `url(${book.imageLinks.thumbnail})`}}></div>
                       <div className="book-shelf-changer">
-                        <select value={book.shelf ? book.shelf : 'none'} onChange={(event) => changeShelfBook(event.target.value, book)}>
+                        <select value={book.shelf ? book.shelf : 'none'} onChange={(event) => this.addToShelf(event.target.value, book)}>
                           <option value="move" disabled>Move to...</option>
                           {shelfOptions.map((option) => ( <option key={option} value={option}>{getOptionName(option)}</option> ))}
                           <option value="none">None</option>

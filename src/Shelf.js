@@ -3,7 +3,10 @@ import React, { Component } from 'react'
 class Shelf extends Component {
 
   render() {
-    const { changeShelfBook, shelfName, books, shelfOptions, getOptionName } = this.props
+    const { changeShelfBook, shelfName, books, shelfOptions, getOptionName, treatNoThumb, treatNoAuthor } = this.props
+
+    treatNoThumb(books)
+    treatNoAuthor(books)
 
     return (
       <div className="bookshelf">
