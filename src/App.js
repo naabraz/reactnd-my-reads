@@ -7,7 +7,6 @@ import ListShelves from './ListShelves'
 
 import * as BooksAPI from './BooksAPI'
 
-
 class BooksApp extends Component {
 
   state = {

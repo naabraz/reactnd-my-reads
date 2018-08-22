@@ -6,16 +6,44 @@ import * as BooksAPI from './BooksAPI'
 class Search extends Component {
 
   state = {
-    booksResult: []
+    booksResult: [],
+    query: ''
   }
 
   searchBook (query) {
+    return this.theresQuery(query) ? this.fetchBooks(query) : this.clearBooksResult()
+  }
+
+  updateQuery = (query) => {
+    this.setState({ query })
+    this.searchBook(this.state.query)
+  }
+
+  theresQuery (query) {
+    return query || query !== ''
+  }
+
+  theresBooksResult (response) {
+    return response && !response.error
+  }
+
+  clearBooksResult () {
+    const booksResult = []
+    this.setState({booksResult})
+  }
+
+  fetchBooks (query) {
     BooksAPI.search(query).then((booksResult) => {
-      if (!booksResult.error) {
-        this.getShelf(booksResult)
-        this.setState({booksResult})
-      }
+      this.theresBooksResult(booksResult) ? this.makeBookObject(booksResult) : this.setState({booksResult: []})
+      if (!this.theresQuery(this.state.query)) this.clearBooksResult()
     })
+  }
+
+  makeBookObject (booksResult) {
+    this.getShelf(booksResult)
+    this.treatNoThumb(booksResult)
+    this.treatNoAuthor(booksResult)
+    this.setState({booksResult})
   }
 
   getShelf (searchBooks) {
@@ -23,6 +51,18 @@ class Search extends Component {
       return searchBooks.map((searchBooks) => {
         return shelfBooks.id === searchBooks.id ? Object.assign(searchBooks, {shelf: shelfBooks.shelf}) : Object.assign({}, searchBooks)
       })
+    })
+  }
+
+  treatNoThumb (searchBooks) {
+    searchBooks.map((books) => {
+      return !books.imageLinks ? Object.assign(books, { imageLinks: { thumbnail: '' } }) : Object.assign({}, books)
+    })
+  }
+
+  treatNoAuthor (searchBooks) {
+    searchBooks.map((books) => {
+      return !books.authors ? Object.assign(books, { authors: [] }) : Object.assign({}, books)
     })
   }
 
@@ -34,12 +74,15 @@ class Search extends Component {
         <div className="search-books-bar">
           <Link className="close-search" to="/">Close</Link>
           <div className="search-books-input-wrapper">
-            <input type="text" placeholder="Search by title or author" onChange={(event) => this.searchBook(event.target.value)}/>
+            <input type="text" placeholder="Search by title or author"
+              value={this.state.query}
+              onChange={(event) => this.updateQuery(event.target.value)}
+            />
           </div>
         </div>
         <div className="search-books-results">
         <ol className="books-grid">
-          {this.state.booksResult.length && (
+          {this.state.booksResult.length > 0 && (
             this.state.booksResult.map((book) => (
               <li key={book.id}>
                 <div className="book">
@@ -54,10 +97,11 @@ class Search extends Component {
                       </div>
                   </div>
                   <div className="book-title">{book.title}</div>
+                  {book.authors.map((author) => ( <div key={author} className="book-authors">{author}</div>))}
                 </div>
               </li>
-              ))
-            )}
+            ))
+          )}
           </ol>
         </div>
       </div>
