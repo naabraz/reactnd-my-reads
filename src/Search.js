@@ -4,6 +4,8 @@ import { Link } from 'react-router-dom'
 import BookTreatment from './lib/BookTreatment'
 import ShelfOptions from './lib/ShelfOptions'
 
+import Book from './Book'
+
 import * as BooksAPI from './BooksAPI'
 
 class Search extends Component {
@@ -57,17 +59,16 @@ class Search extends Component {
     })
   }
 
-  addToShelf (shelf, book) {
-    this.props.changeShelfBook(shelf, book)
-    this.setState((state) =>  {
-      state.booksResult[state.booksResult.indexOf(book)].shelf = shelf
-    })
-  }
-
   render () {
-    const { books } = this.props
-
+    const { books, changeShelfBook } = this.props
     const shelfOptions = ShelfOptions.getShelfOptions(books)
+
+    const addToShelf = (shelf, book) => {
+      this.props.changeShelfBook(shelf, book)
+      this.setState((state) =>  {
+        state.booksResult[state.booksResult.indexOf(book)].shelf = shelf
+      })
+    }
 
     return (
       <div className="search-books">
@@ -81,27 +82,18 @@ class Search extends Component {
           </div>
         </div>
         <div className="search-books-results">
-        <ol className="books-grid">
-          {this.state.booksResult.length > 0 && (
-            this.state.booksResult.map((book) => (
-              <li key={book.id}>
-                <div className="book">
-                  <div className="book-top">
-                    <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: `url(${book.imageLinks.thumbnail})`}}></div>
-                      <div className="book-shelf-changer">
-                        <select value={book.shelf ? book.shelf : 'none'} onChange={(event) => this.addToShelf(event.target.value, book)}>
-                          <option value="move" disabled>Move to...</option>
-                          {shelfOptions.map((option) => ( <option key={option} value={option}>{ShelfOptions.getOptionName(option)}</option> ))}
-                          <option value="none">None</option>
-                        </select>
-                      </div>
-                  </div>
-                  <div className="book-title">{book.title}</div>
-                  {book.authors.map((author) => ( <div key={author} className="book-authors">{author}</div>))}
-                </div>
-              </li>
-            ))
-          )}
+          <ol className="books-grid">
+            {this.state.booksResult.length > 0 && (
+              this.state.booksResult.map((book) => (
+                <Book key={book.id}
+                  book={book}
+                  options={shelfOptions}
+                  changeShelfBook={changeShelfBook}
+                  addToShelf={addToShelf}
+                  from={'search'}
+                />
+              ))
+            )}
           </ol>
         </div>
       </div>
