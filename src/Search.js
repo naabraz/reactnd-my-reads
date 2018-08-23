@@ -16,7 +16,7 @@ class Search extends Component {
 
   updateQuery = (query) => {
     this.setState({ query })
-    this.searchBook(this.state.query)
+    this.searchBook(query)
   }
 
   theresQuery (query) {
