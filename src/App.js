@@ -5,63 +5,39 @@ import './App.css'
 import Search from './Search'
 import ListShelves from './ListShelves'
 
+import BookTreatment from './lib/BookTreatment'
+
 import * as BooksAPI from './BooksAPI'
 
 class BooksApp extends Component {
 
   state = {
-    read: [],
-    currentlyReading: [],
-    wantToRead: [],
-    shelfOptions: [],
     books: []
   }
 
-  bookTypes = {
-    read: 'read',
-    currentlyReading: 'currentlyReading',
-    wantToRead: 'wantToRead'
-  }
-
-  getShelfBooks = (books, shelf) => books.filter((book) => book.shelf === shelf)
-  getShelfOptions = (books) => books.map((book) => book.shelf).filter((elem, pos, arr) => arr.indexOf(elem) === pos)
-
   componentDidMount() {
     BooksAPI.getAll().then((books) => {
-      const read = this.getShelfBooks(books, this.bookTypes.read)
-      const currentlyReading = this.getShelfBooks(books, this.bookTypes.currentlyReading)
-      const wantToRead = this.getShelfBooks(books, this.bookTypes.wantToRead)
-      const shelfOptions = this.getShelfOptions(books)
+      BookTreatment.treatNoAuthor(books)
+      BookTreatment.treatNoThumb(books)
 
-      this.setState({read})
-      this.setState({currentlyReading})
-      this.setState({wantToRead})
-      this.setState({shelfOptions})
       this.setState({books})
     })
   }
 
   changeShelfBook = (shelf, book) => {
-    BooksAPI.update(book, shelf).then(() => this.componentDidMount())
-  }
+    BooksAPI.update(book, shelf).then((response) => {
+      const books = []
 
-  getOptionName = (option) => {
-    return {
-      'currentlyReading': 'Currently Reading',
-      'read': 'Read',
-      'wantToRead': 'Want To Read'
-    }[option]
-  }
+      Object.keys(response).map((shelf) => {
+        response[shelf].map((id) => {
+          this.state.books.filter((book) => book.id === id).map((book) => {
+            book.shelf = shelf
+            books.push(book)
+          })
+        })
+      })
 
-  treatNoThumb (books) {
-    books.map((books) => {
-      return !books.imageLinks ? Object.assign(books, { imageLinks: { thumbnail: '' } }) : Object.assign({}, books)
-    })
-  }
-
-  treatNoAuthor (books) {
-    books.map((books) => {
-      return !books.authors ? Object.assign(books, { authors: [] }) : Object.assign({}, books)
+      this.setState({books: books})
     })
   }
 
@@ -69,25 +45,13 @@ class BooksApp extends Component {
     return (
       <div className="app">
         <Route exact path='/' render={() => (
-          <ListShelves shelfOptions={this.state.shelfOptions}
-            currentlyReading={this.state.currentlyReading}
-            wantToRead={this.state.wantToRead}
-            read={this.state.read}
-            changeShelfBook={this.changeShelfBook}
-            getOptionName={this.getOptionName}
-            treatNoThumb={this.treatNoThumb}
-            treatNoAuthor={this.treatNoAuthor}
-          />
+          <ListShelves books={this.state.books}
+            changeShelfBook={this.changeShelfBook} />
         )}/>
         <Route path='/search' render={({ history }) => (
           <Search onSearchBook={() => history.push('/')}
-            shelfOptions={this.state.shelfOptions}
-            changeShelfBook={this.changeShelfBook}
-            getOptionName={this.getOptionName}
             books={this.state.books}
-            treatNoThumb={this.treatNoThumb}
-            treatNoAuthor={this.treatNoAuthor}
-          />
+            changeShelfBook={this.changeShelfBook} />
         )}/>
       </div>
     )

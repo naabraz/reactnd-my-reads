@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 
+import BookTreatment from './lib/BookTreatment'
+
 import * as BooksAPI from './BooksAPI'
 
 class Search extends Component {
@@ -41,8 +43,8 @@ class Search extends Component {
 
   makeBookObject (booksResult) {
     this.getShelf(booksResult)
-    this.props.treatNoThumb(booksResult)
-    this.props.treatNoAuthor(booksResult)
+    BookTreatment.treatNoThumb(booksResult)
+    BookTreatment.treatNoAuthor(booksResult)
     this.setState({booksResult})
   }
 
