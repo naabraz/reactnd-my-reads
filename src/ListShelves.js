@@ -27,7 +27,8 @@ class ListShelves extends Component {
               title={shelves[shelf][0]}
               options={shelfOptions}
               books={books.filter((book) => book.shelf === shelves[shelf][1])}
-              changeShelfBook={this.props.changeShelfBook} />
+              changeShelfBook={this.props.changeShelfBook}
+            />
           )}
         </div>
         <div className="open-search">
