@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 
 import BookTreatment from './lib/BookTreatment'
+import ShelfOptions from './lib/ShelfOptions'
 
 import * as BooksAPI from './BooksAPI'
 
@@ -64,7 +65,9 @@ class Search extends Component {
   }
 
   render () {
-    const { shelfOptions, getOptionName } = this.props
+    const { books } = this.props
+
+    const shelfOptions = ShelfOptions.getShelfOptions(books)
 
     return (
       <div className="search-books">
@@ -88,7 +91,7 @@ class Search extends Component {
                       <div className="book-shelf-changer">
                         <select value={book.shelf ? book.shelf : 'none'} onChange={(event) => this.addToShelf(event.target.value, book)}>
                           <option value="move" disabled>Move to...</option>
-                          {shelfOptions.map((option) => ( <option key={option} value={option}>{getOptionName(option)}</option> ))}
+                          {shelfOptions.map((option) => ( <option key={option} value={option}>{ShelfOptions.getOptionName(option)}</option> ))}
                           <option value="none">None</option>
                         </select>
                       </div>
