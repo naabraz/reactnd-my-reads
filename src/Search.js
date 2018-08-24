@@ -11,28 +11,38 @@ import * as BooksAPI from './BooksAPI'
 class Search extends Component {
 
   state = {
-    booksResult: []  
+    booksResult: [],
+    error: false,
+    emptyResult: false,
+    query: ''
   }
 
   searchBooks (query) {
-    query.length > 0 ? this.fetchBooks(query) : this.setState({booksResult: []})
+    this.setState({ query: query })
+    query.length > 0 ? this.fetchBooks(query) : this.clearSearch()
   }
 
   fetchBooks (query) {
     BooksAPI.search(query).then((booksResult) => {
-      booksResult && !booksResult.error ? this.formatBook(booksResult) : this.setState({booksResult: []})
+      booksResult && !booksResult.error ? this.formatBook(booksResult) : this.setState({ booksResult: [], error: true, emptyResult: true })
     })
+  }
+
+  clearSearch () {
+    this.setState({ booksResult: [], emptyResult: true })
   }
 
   formatBook (booksResult) {
     BookTreatment.getCurrentShelf(booksResult, this.props.books)
     BookTreatment.treatNoThumb(booksResult)
     BookTreatment.treatNoAuthor(booksResult)
-    this.setState({booksResult})
+    this.setState({booksResult, error: false, emptyResult: false})
   }
 
   render () {
     const { books, changeShelfBook } = this.props
+    const { booksResult, error, emptyResult, query } = this.state
+
     const shelfOptions = ShelfOptions.getShelfOptions(books)
 
     const addToShelf = (shelf, book) => {
@@ -42,29 +52,32 @@ class Search extends Component {
       })
     }
 
+    const showResult = () => {
+      return query.length > 0 && booksResult.length > 0 && !error
+    }
+
+    const bookComponent = (book) =>
+      <Book key={book.id}
+        book={book}
+        options={shelfOptions}
+        changeShelfBook={changeShelfBook}
+        addToShelf={addToShelf}
+        from={'search'} />
+
     return (
       <div className="search-books">
         <div className="search-books-bar">
           <Link className="close-search" to="/">Close</Link>
           <div className="search-books-input-wrapper">
-            <input type="text" placeholder="Search by title or author"
+            <input type="text" placeholder="Search by title or author" 
               onChange={(event) => this.searchBooks(event.target.value)}
-            />
+              value={this.state.query} />
           </div>
         </div>
         <div className="search-books-results">
           <ol className="books-grid">
-            {this.state.booksResult.length > 0 && (
-              this.state.booksResult.map((book) => (
-                <Book key={book.id}
-                  book={book}
-                  options={shelfOptions}
-                  changeShelfBook={changeShelfBook}
-                  addToShelf={addToShelf}
-                  from={'search'}
-                />
-              ))
-            )}
+            {showResult() && ( booksResult.map((book) => ( bookComponent(book) )) )}
+            {emptyResult && query && ( <p>Empty Result</p> )}
           </ol>
         </div>
       </div>
