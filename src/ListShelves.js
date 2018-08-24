@@ -6,33 +6,27 @@ import Shelf from './Shelf'
 class ListShelves extends Component {
 
   render() {
+    const { books, changeShelfBook } = this.props
+
+    const shelves = {
+      currentlyReading: ['Currently Reading', 'currentlyReading'],
+      wantToRead: ['Want to Read', 'wantToRead'],
+      read: ['Read', 'read']
+    }
+
     return (
       <div className="list-books">
         <div className="list-books-title">
           <h1>MyReads</h1>
         </div>
         <div className="list-books-content">
-          <Shelf shelfName="Currently Reading"
-            shelfOptions={this.props.shelfOptions}
-            books={this.props.currentlyReading}
-            changeShelfBook={this.props.changeShelfBook}
-            getOptionName={this.props.getOptionName}
-            treatNoThumb={this.props.treatNoThumb}
-            treatNoAuthor={this.props.treatNoAuthor} />
-          <Shelf shelfName="Want To Read"
-            shelfOptions={this.props.shelfOptions}
-            books={this.props.wantToRead}
-            changeShelfBook={this.props.changeShelfBook}
-            getOptionName={this.props.getOptionName}
-            treatNoThumb={this.props.treatNoThumb}
-            treatNoAuthor={this.props.treatNoAuthor} />
-          <Shelf shelfName="Read"
-            shelfOptions={this.props.shelfOptions}
-            books={this.props.read}
-            changeShelfBook={this.props.changeShelfBook}
-            getOptionName={this.props.getOptionName}
-            treatNoThumb={this.props.treatNoThumb}
-            treatNoAuthor={this.props.treatNoAuthor} />
+          {Object.keys(shelves).map((shelf) =>
+            <Shelf key={shelf}
+              title={shelves[shelf][0]}
+              books={books.filter((book) => book.shelf === shelves[shelf][1])}
+              changeShelfBook={changeShelfBook}
+            />
+          )}
         </div>
         <div className="open-search">
           <Link to='/search' className='open-search'>Search</Link>

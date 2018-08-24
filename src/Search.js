@@ -1,102 +1,78 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 
+import BookTreatment from './lib/BookTreatment'
+import Book from './Book'
+
 import * as BooksAPI from './BooksAPI'
 
 class Search extends Component {
 
   state = {
     booksResult: [],
+    error: false,
+    emptyResult: false,
     query: ''
   }
 
-  searchBook (query) {
-    return this.theresQuery(query) ? this.fetchBooks(query) : this.clearBooksResult()
-  }
-
-  updateQuery = (query) => {
-    this.setState({ query })
-    this.searchBook(query)
-  }
-
-  theresQuery (query) {
-    return query || query !== ''
-  }
-
-  theresBooksResult (response) {
-    return response && !response.error
-  }
-
-  clearBooksResult () {
-    const booksResult = []
-    this.setState({booksResult})
+  searchBooks (query) {
+    this.setState({ query: query })
+    query.length > 0 ? this.fetchBooks(query) : this.clearSearch()
   }
 
   fetchBooks (query) {
     BooksAPI.search(query).then((booksResult) => {
-      this.theresBooksResult(booksResult) ? this.makeBookObject(booksResult) : this.setState({booksResult: []})
-      if (!this.theresQuery(this.state.query)) this.clearBooksResult()
+      booksResult && !booksResult.error ? this.formatBook(booksResult) : this.setState({ booksResult: [], error: true, emptyResult: true })
     })
   }
 
-  makeBookObject (booksResult) {
-    this.getShelf(booksResult)
-    this.props.treatNoThumb(booksResult)
-    this.props.treatNoAuthor(booksResult)
-    this.setState({booksResult})
+  clearSearch () {
+    this.setState({ booksResult: [], emptyResult: true })
   }
 
-  getShelf (searchBooks) {
-    return this.props.books.map((shelfBooks) => {
-      return searchBooks.map((searchBooks) => {
-        return shelfBooks.id === searchBooks.id ? Object.assign(searchBooks, {shelf: shelfBooks.shelf}) : Object.assign({}, searchBooks)
-      })
-    })
-  }
-
-  addToShelf (shelf, book) {
-    this.props.changeShelfBook(shelf, book)
-    this.setState((state) =>  {
-      state.booksResult[state.booksResult.indexOf(book)].shelf = shelf
-    })
+  formatBook (booksResult) {
+    BookTreatment.getCurrentShelf(booksResult, this.props.books)
+    BookTreatment.treatNoThumb(booksResult)
+    BookTreatment.treatNoAuthor(booksResult)
+    this.setState({booksResult, error: false, emptyResult: false})
   }
 
   render () {
-    const { shelfOptions, getOptionName } = this.props
+    const { changeShelfBook } = this.props
+    const { booksResult, error, emptyResult, query } = this.state
+
+    const addToShelf = (shelf, book) => {
+      changeShelfBook(shelf, book)
+      this.setState((state) =>  {
+        state.booksResult[state.booksResult.indexOf(book)].shelf = shelf
+      })
+    }
+
+    const showResult = () => {
+      return query.length > 0 && booksResult.length > 0 && !error
+    }
+
+    const bookComponent = (book) =>
+      <Book key={book.id}
+        book={book}
+        changeShelfBook={changeShelfBook}
+        addToShelf={addToShelf}
+        from={'search'} />
 
     return (
       <div className="search-books">
         <div className="search-books-bar">
           <Link className="close-search" to="/">Close</Link>
           <div className="search-books-input-wrapper">
-            <input type="text" placeholder="Search by title or author"
-              value={this.state.query}
-              onChange={(event) => this.updateQuery(event.target.value)}
-            />
+            <input type="text" placeholder="Search by title or author" 
+              onChange={(event) => this.searchBooks(event.target.value)}
+              value={this.state.query} />
           </div>
         </div>
         <div className="search-books-results">
-        <ol className="books-grid">
-          {this.state.booksResult.length > 0 && (
-            this.state.booksResult.map((book) => (
-              <li key={book.id}>
-                <div className="book">
-                  <div className="book-top">
-                    <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: `url(${book.imageLinks.thumbnail})`}}></div>
-                      <div className="book-shelf-changer">
-                        <select value={book.shelf ? book.shelf : 'none'} onChange={(event) => this.addToShelf(event.target.value, book)}>
-                          <option value="move" disabled>Move to...</option>
-                          {shelfOptions.map((option) => ( <option key={option} value={option}>{getOptionName(option)}</option> ))}
-                          <option value="none">None</option>
-                        </select>
-                      </div>
-                  </div>
-                  <div className="book-title">{book.title}</div>
-                  {book.authors.map((author) => ( <div key={author} className="book-authors">{author}</div>))}
-                </div>
-              </li>
-            ))
-          )}
+          <ol className="books-grid">
+            {showResult() && ( booksResult.map((book) => ( bookComponent(book) )) )}
+            {emptyResult && query && ( <p>Empty Result</p> )}
           </ol>
         </div>
       </div>
