@@ -2,8 +2,6 @@ import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 
 import BookTreatment from './lib/BookTreatment'
-import ShelfOptions from './lib/ShelfOptions'
-
 import Book from './Book'
 
 import * as BooksAPI from './BooksAPI'
@@ -40,10 +38,8 @@ class Search extends Component {
   }
 
   render () {
-    const { books, changeShelfBook } = this.props
+    const { changeShelfBook } = this.props
     const { booksResult, error, emptyResult, query } = this.state
-
-    const shelfOptions = ShelfOptions.getShelfOptions(books)
 
     const addToShelf = (shelf, book) => {
       changeShelfBook(shelf, book)
@@ -59,7 +55,6 @@ class Search extends Component {
     const bookComponent = (book) =>
       <Book key={book.id}
         book={book}
-        options={shelfOptions}
         changeShelfBook={changeShelfBook}
         addToShelf={addToShelf}
         from={'search'} />

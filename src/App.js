@@ -27,8 +27,12 @@ class BooksApp extends Component {
   changeShelfBook = (shelf, book) => {
     BooksAPI.update(book, shelf)
     const bookExist = this.state.books.map((books) => books.id === book.id).indexOf(true)
-    
-    bookExist > 1 ? this.setState(state => state.books[bookExist].shelf = shelf) : this.setState(state => state.books.push(book))
+
+    if (bookExist >= 0) {
+      this.setState(state => state.books[bookExist].shelf = shelf) 
+    } else {
+      this.setState(state => state.books.push(book))
+    }
   }
 
   render() {

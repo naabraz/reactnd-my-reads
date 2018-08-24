@@ -2,13 +2,11 @@ import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 
 import Shelf from './Shelf'
-import ShelfOptions from './lib/ShelfOptions'
 
 class ListShelves extends Component {
 
   render() {
-    const { books } = this.props
-    const shelfOptions = ShelfOptions.getShelfOptions(books)
+    const { books, changeShelfBook } = this.props
 
     const shelves = {
       currentlyReading: ['Currently Reading', 'currentlyReading'],
@@ -25,9 +23,8 @@ class ListShelves extends Component {
           {Object.keys(shelves).map((shelf) =>
             <Shelf key={shelf}
               title={shelves[shelf][0]}
-              options={shelfOptions}
               books={books.filter((book) => book.shelf === shelves[shelf][1])}
-              changeShelfBook={this.props.changeShelfBook}
+              changeShelfBook={changeShelfBook}
             />
           )}
         </div>

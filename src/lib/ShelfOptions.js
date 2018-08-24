@@ -1,4 +1,4 @@
-const getShelfOptions = (books) => books.map((book) => book.shelf).filter((elem, pos, arr) => arr.indexOf(elem) === pos)
+const getShelfOptions = ['currentlyReading', 'read', 'wantToRead']
 
 const getOptionName = (option) => {
   return {
