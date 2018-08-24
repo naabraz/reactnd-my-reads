@@ -10,4 +10,12 @@ const treatNoAuthor = (books) => {
   })
 }
 
-module.exports = {treatNoAuthor, treatNoThumb}
+const getCurrentShelf = (searchResult, shelfBooks) => {
+  return shelfBooks.map((shelfBooks) => {
+    return searchResult.map((searchBooks) => {
+      return shelfBooks.id === searchBooks.id ? Object.assign(searchBooks, {shelf: shelfBooks.shelf}) : Object.assign({}, searchBooks)
+    })
+  })
+}
+
+module.exports = { treatNoAuthor, treatNoThumb, getCurrentShelf }

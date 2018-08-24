@@ -25,20 +25,10 @@ class BooksApp extends Component {
   }
 
   changeShelfBook = (shelf, book) => {
-    BooksAPI.update(book, shelf).then((response) => {
-      const books = []
-
-      Object.keys(response).map((shelf) => {
-        response[shelf].map((id) => {
-          this.state.books.filter((book) => book.id === id).map((book) => {
-            book.shelf = shelf
-            books.push(book)
-          })
-        })
-      })
-
-      this.setState({books: books})
-    })
+    BooksAPI.update(book, shelf)
+    const bookExist = this.state.books.map((books) => books.id === book.id).indexOf(true)
+    
+    bookExist > 1 ? this.setState(state => state.books[bookExist].shelf = shelf) : this.setState(state => state.books.push(book))
   }
 
   render() {
@@ -48,10 +38,9 @@ class BooksApp extends Component {
           <ListShelves books={this.state.books}
             changeShelfBook={this.changeShelfBook} />
         )}/>
-        <Route path='/search' render={({ history }) => (
-          <Search onSearchBook={() => history.push('/')}
-            books={this.state.books}
-            changeShelfBook={this.changeShelfBook} />
+        <Route path='/search' render={() => (
+          <Search books={this.state.books}
+          changeShelfBook={this.changeShelfBook} />
         )}/>
       </div>
     )
