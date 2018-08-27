@@ -19,6 +19,7 @@ class ShelfChanger extends Component {
         <option value="move" disabled>Move to...</option>
         {getShelfOptions.filter((option) => option !== book.shelf)
             .map((option) => ( <option key={option} value={option}>{getOptionName(option)}</option> ))}
+        <option value="none">None</option>
       </select>
 
     return (
