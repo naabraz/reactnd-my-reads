@@ -2,10 +2,10 @@ import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import {DebounceInput} from 'react-debounce-input';
 
-import BookTreatment from './lib/BookTreatment'
+import BookTreatment from '../lib/BookTreatment'
 import Book from './Book'
 
-import * as BooksAPI from './BooksAPI'
+import * as BooksAPI from '../api/BooksAPI'
 
 class Search extends Component {
 

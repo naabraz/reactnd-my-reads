@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 
-import { getOptionName, getShelfOptions } from './lib/ShelfOptions'
+import { getOptionName, getShelfOptions } from '../helpers/ShelfHelper'
 
 class ShelfChanger extends Component {
 

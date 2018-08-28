@@ -1,14 +1,15 @@
 import React, { Component } from 'react'
 import { Route, Switch } from 'react-router-dom'
 
-import './App.css'
 import Search from './Search'
 import ListShelves from './ListShelves'
 import NotFound from './NotFound'
 
-import BookTreatment from './lib/BookTreatment'
+import * as BooksAPI from '../api/BooksAPI'
 
-import * as BooksAPI from './BooksAPI'
+import BookFormatter from '../helpers/BookFormatter'
+
+import '../css/App.css'
 
 class BooksApp extends Component {
 
@@ -18,8 +19,8 @@ class BooksApp extends Component {
 
   componentDidMount() {
     BooksAPI.getAll().then((books) => {
-      BookTreatment.treatNoAuthor(books)
-      BookTreatment.treatNoThumb(books)
+      BookFormatter.noAuthor(books)
+      BookFormatter.noThumb(books)
 
       this.setState({books})
     })
