@@ -1,6 +1,7 @@
 const treatNoThumb = (books) => {
   books.map((books) => {
-    return !books.imageLinks ? Object.assign(books, { imageLinks: { thumbnail: '' } }) : Object.assign({}, books)
+    return !books.imageLinks ? Object.assign(books, 
+      { imageLinks: { thumbnail: 'http://via.placeholder.com/128x193?text=No%20Cover' } }) : Object.assign({}, books)
   })
 }
 
