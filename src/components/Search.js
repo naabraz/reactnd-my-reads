@@ -2,7 +2,8 @@ import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import {DebounceInput} from 'react-debounce-input';
 
-import BookTreatment from '../lib/BookTreatment'
+import BookFormatter from '../helpers/BookFormatter'
+import ShelfHelper from '../helpers/ShelfHelper'
 import Book from './Book'
 
 import * as BooksAPI from '../api/BooksAPI'
@@ -32,9 +33,9 @@ class Search extends Component {
   }
 
   formatBook (booksResult) {
-    BookTreatment.getCurrentShelf(booksResult, this.props.books)
-    BookTreatment.treatNoThumb(booksResult)
-    BookTreatment.treatNoAuthor(booksResult)
+    ShelfHelper.getCurrentShelf(booksResult, this.props.books)
+    BookFormatter.noThumb(booksResult)
+    BookFormatter.noAuthor(booksResult)
     this.setState({booksResult, error: false, emptyResult: false})
   }
 
