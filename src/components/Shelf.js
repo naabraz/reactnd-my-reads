@@ -17,7 +17,6 @@ class Shelf extends Component {
                 book={book}
                 options={options}
                 changeShelfBook={changeShelfBook}
-                from={'shelf'}
               />
             ))}
           </ol>

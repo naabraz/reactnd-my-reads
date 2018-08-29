@@ -5,7 +5,7 @@ import ShelfChanger from './ShelfChanger'
 class Book extends Component {
 
   render() {
-    const { changeShelfBook, book, from, addToShelf} = this.props
+    const { changeShelfBook, book, addToShelf} = this.props
 
     return (
       <li key={book.id}>
@@ -15,7 +15,6 @@ class Book extends Component {
             <ShelfChanger
               changeShelfBook={changeShelfBook}
               book={book}
-              from={from}
               addToShelf={addToShelf}
             />
           </div>

@@ -4,27 +4,31 @@ import { getOptionName, getShelfOptions } from '../helpers/ShelfHelper'
 
 class ShelfChanger extends Component {
 
+  path = {
+    'search': '/search'
+  }
+
+  isSearch = window.location.pathname === this.path.search
+
+  getOptions = (book) => {
+    const search = getShelfOptions.map((option) => ( <option key={ option } value={option}>{ getOptionName(option) }</option> ))
+    const shelf = getShelfOptions.filter((option) => option !== book.shelf)
+      .map((option) => ( <option key={option} value={option}>{ getOptionName(option)} </option> ))
+
+    return this.isSearch ? search : shelf
+  }
+
   render() {
-    const { changeShelfBook, book, from, addToShelf } = this.props
-
-    const search =
-      <select value={book.shelf ? book.shelf : 'none'} onChange={(event) => addToShelf(event.target.value, book)}>
-        <option value="move" disabled>Move to...</option>
-        {getShelfOptions.map((option) => ( <option key={option} value={option}>{getOptionName(option)}</option> ))}
-        <option value="none">None</option>
-      </select>
-
-    const shelf =
-      <select value="move" onChange={(event) => changeShelfBook(event.target.value, book)}>
-        <option value="move" disabled>Move to...</option>
-        {getShelfOptions.filter((option) => option !== book.shelf)
-            .map((option) => ( <option key={option} value={option}>{getOptionName(option)}</option> ))}
-        <option value="none">None</option>
-      </select>
+    const { changeShelfBook, addToShelf, book } = this.props
 
     return (
       <div className="book-shelf-changer">
-        {from === 'shelf' ? shelf : search}
+        <select value={ this.isSearch ? (book.shelf ? book.shelf : 'none') : 'move' } 
+          onChange={ (event) => this.isSearch ? addToShelf(event.target.value, book) : changeShelfBook(event.target.value, book) }>
+          <option value="move" disabled>Move to...</option>
+          { this.getOptions(book) }
+          <option value="none">None</option>
+        </select>
       </div>
     )
   }
