@@ -10,4 +10,10 @@ describe('Not Found test', () => {
 
     expect(wrapper.find('.not-found')).toBeDefined()
   })
+
+  it('renders message when route not found', () => {
+    const wrapper = shallow(<NotFound />)
+
+    expect(wrapper.contains(<h1>404 Not Found :(</h1>)).toBeTruthy()
+  })
 })
