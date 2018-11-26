@@ -29,5 +29,4 @@ describe('List Shelves component test', () => {
 
     expect(wrapper.contains(title)).toBeTruthy()
   })
-
 })
