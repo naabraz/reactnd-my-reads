@@ -17,8 +17,14 @@ class Search extends Component {
     query: ''
   }
 
+  handleChange (event) {
+    const { value } = event.target
+    this.setState({ query: value })
+
+    this.searchBooks(value)
+  }
+
   searchBooks (query) {
-    this.setState({ query: query })
     query.length > 0 ? this.fetchBooks(query) : this.clearSearch()
   }
 
@@ -67,10 +73,12 @@ class Search extends Component {
           <Link className="close-search" to="/">Close</Link>
           <div className="search-books-input-wrapper">
             <DebounceInput
-              type="text" placeholder="Search by title or author" 
+              className="search-input"
+              type="text" 
+              placeholder="Search by title or author" 
               minLength={2}
               debounceTimeout={300}
-              onChange={(event) => this.searchBooks(event.target.value)}
+              onChange={this.handleChange.bind(this)}
               value={this.state.query} />
           </div>
         </div>
