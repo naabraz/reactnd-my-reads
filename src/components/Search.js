@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import {DebounceInput} from 'react-debounce-input';
+import { DebounceInput } from 'react-debounce-input'
 
 import BookFormatter from '../helpers/BookFormatter'
 import ShelfHelper from '../helpers/ShelfHelper'
