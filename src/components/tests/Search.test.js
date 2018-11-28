@@ -9,11 +9,10 @@ import Search from '../Search'
 
 describe('Search component test', () => {
   let wrapper
+  let books = [{id: '123'}, {id: '123'}]
+  let changeShelfBook = () => sinon.stub()
 
   beforeEach(() => {
-    const books = [{id: '123'}, {id: '123'}]
-    const changeShelfBook = () => sinon.stub()
-
     wrapper = mount(
       <BrowserRouter>
         <Route exact path='/' render={() => (<Search books={books} changeShelfBook={changeShelfBook} />)}/>
@@ -30,30 +29,44 @@ describe('Search component test', () => {
     expect(wrapper.find('[to="/"]').length).toBe(1)
   })
 
-  it('should search books', () => {
+  it('should search books when an input query exists', () => {
     const mockResult = [{
-      allowAnonLogging: false,
-      authors: ["Clay Farris Naff"],
-      averageRating: 2,
-      canonicalVolumeLink: "https://books.google.com/books/about/Astronomy.html?hl=&id=0gNAAQAAIAAJ",
-      categories: ["Juvenile Nonfiction"],
-      description: "A collection of essays which present the history of astronomy.",
-      id: "0gNAAQAAIAAJ",
-      imageLinks: {smallThumbnail: "img", thumbnail: "img"},
-      title: "Astronomy"
+      authors: ['Clay Farris Naff'],
+      categories: ['Juvenile Nonfiction'],
+      description: 'A collection of essays which present the history of astronomy.',
+      id: '0gNAAQAAIAAJ',
+      imageLinks: {smallThumbnail: 'img', thumbnail: 'img'},
+      title: 'Astronomy'
     }]
 
-    BooksAPI.search = jest.fn().mockImplementationOnce(() => Promise.resolve(mockResult))
-
     const handleChange = sinon.spy(Search.prototype, 'handleChange')
-    const event = { target: { name: 'search-input', value: 'Star Wars' } }
+    const event = { target: { value: 'Star Wars' } }
 
-    const books = [{id: '123'}, {id: '123'}]
-    const changeShelfBook = () => sinon.stub()
+    BooksAPI.search = jest.fn().mockImplementationOnce(() => Promise.resolve(mockResult))
     wrapper = shallow(<Search books={books} changeShelfBook={changeShelfBook} />)
-
     wrapper.find(DebounceInput).simulate('change', event)
 
     expect(handleChange.calledOnce).toEqual(true)
+    expect(BooksAPI.search).toBeCalledWith('Star Wars')
+  })
+
+  it('should not search when input value doesnt exists', () => {
+    const event = { target: { value: '' } }
+    const clearSearch = sinon.spy(Search.prototype, 'clearSearch')
+    
+    wrapper = shallow(<Search books={books} changeShelfBook={changeShelfBook} />)
+    wrapper.find(DebounceInput).simulate('change', event)
+
+    expect(clearSearch.calledOnce).toEqual(true)
+  })
+
+  it('should show empty result when theres an error trying to search', () => {
+    const event = { target: { value: 'Kotlin' } }
+    
+    wrapper = shallow(<Search books={books} changeShelfBook={changeShelfBook} />)
+    BooksAPI.search = jest.fn().mockImplementationOnce(() => Promise.resolve({ error: 'T' }))
+    wrapper.find(DebounceInput).simulate('change', event)
+
+    expect(BooksAPI.search).toBeCalledWith('Kotlin')
   })
 })
