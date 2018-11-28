@@ -1,7 +1,7 @@
 import React from 'react'
 import sinon from 'sinon'
 import { mount } from './enzyme'
-import { Route, BrowserRouter } from 'react-router-dom'
+import { Route, BrowserRouter, Link } from 'react-router-dom'
 
 import Search from '../Search'
 
@@ -17,5 +17,13 @@ describe('Search component test', () => {
         <Route exact path='/' render={() => (<Search books={books} changeShelfBook={changeShelfBook} />)}/>
       </BrowserRouter>
     )
+  })
+
+  afterEach(() => {
+    wrapper.unmount()
+  })
+
+  it('renders Search component', () => {
+    expect(wrapper.find('div.search-books').length).toBe(1)
   })
 })
