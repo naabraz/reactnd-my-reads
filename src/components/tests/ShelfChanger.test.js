@@ -29,7 +29,7 @@ describe('List Shelves component test', () => {
 
   it('should render select with move as value when is not search', () => {
     delete(book).shelf
-  
+
     Object.defineProperty(window.location, 'pathname', {
       writable: true,
       value: '/'
@@ -38,6 +38,19 @@ describe('List Shelves component test', () => {
     wrapper = shallow(<ShelfChanger book={book} addToShelf={addToShelf} changeShelfBook={changeShelfBook} />)
 
     expect(wrapper.find('select[value="move"]')).toHaveLength(1)
+  })
+
+  it('should render select with move as value when is a search', () => {
+    delete(book).shelf
+
+    Object.defineProperty(window.location, 'pathname', {
+      writable: true,
+      value: '/search'
+    })
+
+    wrapper = shallow(<ShelfChanger book={book} addToShelf={addToShelf} changeShelfBook={changeShelfBook} />)
+
+    expect(wrapper.find('select[value="none"]')).toHaveLength(1)
   })
 
 })
