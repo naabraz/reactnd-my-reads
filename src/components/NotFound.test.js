@@ -1,7 +1,7 @@
 import React from 'react'
-import { shallow } from './enzyme'
+import { shallow } from '../config/enzyme'
 
-import NotFound from '../NotFound'
+import NotFound from './NotFound'
 
 describe('Not Found test', () => {
 

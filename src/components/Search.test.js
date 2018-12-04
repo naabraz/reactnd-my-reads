@@ -1,11 +1,11 @@
 import React from 'react'
 import sinon from 'sinon'
-import { mount, shallow } from './enzyme'
+import { mount, shallow } from '../config/enzyme'
 import { Route, BrowserRouter, Link } from 'react-router-dom'
 import { DebounceInput } from 'react-debounce-input'
 
-import * as BooksAPI from '../../api/BooksAPI'
-import Search from '../Search'
+import * as BooksAPI from '../api/BooksAPI'
+import Search from './Search'
 
 describe('Search component test', () => {
   let wrapper

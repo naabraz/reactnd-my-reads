@@ -1,8 +1,8 @@
 import React from 'react'
 import sinon from 'sinon'
-import { shallow } from './enzyme'
+import { shallow } from '../config/enzyme'
 
-import ShelfChanger from '../ShelfChanger'
+import ShelfChanger from './ShelfChanger'
 
 describe('List Shelves component test', () => {
   let wrapper

@@ -1,9 +1,9 @@
 import React from 'react'
 import sinon from 'sinon'
-import { mount } from './enzyme'
+import { mount } from '../config/enzyme'
 import { Route, BrowserRouter } from 'react-router-dom'
 
-import ListShelves from '../ListShelves'
+import ListShelves from './ListShelves'
 
 describe('List Shelves component test', () => {
   let wrapper

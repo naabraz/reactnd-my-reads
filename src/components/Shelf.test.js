@@ -1,8 +1,8 @@
 import React from 'react'
 import sinon from 'sinon'
-import { mount } from './enzyme'
+import { mount } from '../config/enzyme'
 
-import Shelf from '../Shelf'
+import Shelf from './Shelf'
 
 describe('List Shelves component test', () => {
   let wrapper

@@ -1,8 +1,8 @@
 import React from 'react'
 import sinon from 'sinon'
-import { mount } from './enzyme'
+import { mount } from '../config/enzyme'
 
-import Book from '../Book'
+import Book from './Book'
 
 describe('Book component test', () => {
   let wrapper
