@@ -26,7 +26,7 @@ class BooksApp extends Component {
     })
   }
 
-  changeShelfBook = (shelf, book) => {
+  changeShelfBook (shelf, book) {
     BooksAPI.update(book, shelf)
     const bookExist = this.state.books.map((books) => books.id === book.id).indexOf(true)
 
